@@ -1,0 +1,14 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+*
+# Ignore virtual environment
+trading_bot/
+venv/
+.env/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore IDE/project settings
+.vscode/
+.idea/
