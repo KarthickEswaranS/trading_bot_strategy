@@ -9,55 +9,117 @@ class Execution(Strategy):
         self.initial_capital = 100000
         self.lot_size = 1
         self.balance = self.initial_capital
+        self.data = self.stg_smma()
 
     def buy_sell_signal(self):
 
-        df = self.stg_smma()
+        df = self.data
         
         df['long_signal'] = (
-            (df['lips'].shift(1) <= df['teeth']) &
-            (df['lips'] >= df['teeth']) &
-            (df['lips'] >= df['jaw']) &
-            (df['Close'].shift(1) > df['lips']) &
-            ((df['lips'] != df["teeth"]) & (df['lips'] != df["jaw"]))
+            # Accumulation
+            ((df['lips'] != df["teeth"]) & (df['lips'] != df["jaw"])) &
+            (df['teeth'] != df["jaw"]) &
+
+            # (df['lips'].shift(1) <= df['teeth'].shift(1)) &
+            ((df['lips'] > df['teeth']) & (df['teeth'] > df['jaw'])) & 
+            (df['Close'] > df['lips']) 
+          
         )
 
         df['short_signal'] = (
-            (df['lips'].shift(1) >= df['teeth']) &
-            (df['lips'] <= df['teeth']) &
-            (df['lips'] <= df['jaw']) &
-            (df['Close'].shift(1) < df['lips']) &
-            ((df['lips'] != df["teeth"]) & (df['lips'] != df["jaw"]))
+            # Accumulation
+            ((df['lips'] != df["teeth"]) & (df['lips'] != df["jaw"])) &
+            (df['teeth'] != df["jaw"]) &
+
+            # (df['lips'].shift(1) >= df['teeth'].shift(1)) &
+            ((df['lips'] < df['teeth']) & (df['teeth'] < df['jaw'])) & 
+            (df['Close'] < df['lips']) 
+            
         )
 
         self.buy(df)
-        self.sell(df)
+        # self.sell(df)
 
         return df
     
-    def buy(self, buy_signal, sl=0.01):
-        df = buy_signal
-        # tp = df["High"].shift(1)
+    def buy(self, buy_signal_data, ):
+        df = buy_signal_data
+        sl=0.01
         tp = 0.03
 
-        df["buy_price"] = np.where(df["long_signal"], df["Open"], np.nan)
-        df["stoploss_long"]= np.where(df["long_signal"],df["Open"] * (1-sl), np.nan)
-        # df["take_profit_long"]= np.where(df["long_signal"], tp, np.nan)
-        df["take_profit_long"]= np.where(df["long_signal"],df["Close"] * (1+tp), np.nan)
+        df["in_trade"] = False
+        in_trade = False
+        entry_price = 0
+
+        df["buy_price"] = np.where(df["long_signal"], df["Close"], np.nan)
+        df["stoploss_long"]= np.where(df["long_signal"],df["Low"] * (1-sl), np.nan)
+        entry_price = df.index[df['long_signal'] == True].tolist()
+
+        for idx in entry_price:
+           entry_price = df.loc[idx, "buy_price"]
+           print(f"Entry at index {idx}, price: {entry_price}")
+        # for i in range(len(df)):
+
+        #     if not in_trade and entry_price.iloc[i]:
+        #         in_trade = True
+        #         df.loc[i, 'buy_price'] = entry_price
+        #         df.loc[i , 'sl_long'] = df['Close'].iloc[i] * (1-sl)
+        #         df.loc[i , 'in_trade'] = True
+            
+        #     elif in_trade :
+        #         df.loc[i, 'in_trade'] = True
+                 
+        #         if df["lips"].iloc[i] < df['teeth'].iloc[i]:
+        #             df.loc[i, 'exit_price'] = df['Close'].iloc[i]
+        #         else:
+        #             df.loc[i, "exit_price"] = np.nan
+
+        # return df
 
 
-        return df
+        
+        
+        # for i  in  range(len(df)):
+        #  exit_condition =
+        #  if exit_condition:
+        #    df["take_profit_long"]= np.where(df["long_signal"], df["Close"] * (1+tp), np.nan)
+
     
-    def sell(self, sell_signal, sl=0.01):
-        df = sell_signal
-        # tp = df["Low"].shift(1)
-        tp = 0.03
-        df["sell_price"] = np.where(df["short_signal"], df["Open"], np.nan)
-        df["stoploss_short"]= np.where(df["short_signal"],df["Open"] * (1+sl), np.nan)
-        # df["take_profit_short"]= np.where(df["short_signal"], tp, np.nan)
-        df["take_profit_short"]= np.where(df["short_signal"],df["Close"] * (1-tp), np.nan)
+    # def sell(self, sell_signal_data, sl=0.01):
+        # df = sell_signal_data
+        # tp = 0.02
 
-        return df
+        # df['sell_price'] = np.nan
+        # df['tp_short'] = np.nan
+        # df['sl_short'] = np.nan
+        # df['in_trade'] = np.nan
+
+        # in_trade = False
+        # entry_price = 0
+
+        # for i in range(len(df)):
+        #     if not in_trade and df['short_signal'].iloc[i]:
+        #         in_trade = True
+        #         entry_price = df['Close'].iloc[i]
+        #         df.loc[i, 'sell_price'] = entry_price
+        #         df.loc[i , 'sl_short'] = df['Close'].iloc[i] * (1+sl)
+        #         df.loc[i, 'in_trade'] = True
+        #     elif in_trade:
+        #         df[i , 'in_trade'] = True
+                
+        #         if df["lips"].iloc[i] > df["teeth"].iloc[i]:
+        #             df.loc[i, "exit_price"] = df["Close"].iloc[i]
+        #             in_trade = False 
+        #         else:
+        #             df.loc[i, "exit_price"] = np.nan
+
+        # return df
+
+        # df["sell_price"] = np.where(df["short_signal"], df["Close"], np.nan)
+        # df["stoploss_short"]= np.where(df["short_signal"],df["Close"] * (1+sl), np.nan)
+        # # df["take_profit_short"]= np.where(df["short_signal"], tp, np.nan)
+        # df["take_profit_short"]= np.where(df["short_signal"],df["Close"].shift(7) * (1-tp), np.nan)
+
     
     def backtest(self):
         """Simulate trades and compute performance metrics."""
@@ -165,5 +227,6 @@ class Execution(Strategy):
 
         return df
     
-# ex = Execution()
-# ex.backtest()
+ex = Execution()
+df = ex.buy_sell_signal()
+ex.buy(df)

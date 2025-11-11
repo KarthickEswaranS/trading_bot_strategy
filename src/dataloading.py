@@ -9,9 +9,14 @@ class DataLoading(ClientConfig):
     def __init__(self):
         super().__init__()
         self.client = binance.Client(self.api_key, self.api_secret)
+        self.asset = "BTCUSDT"
+        self.start_date = "1-1-2021"
+        self.end_date = "1-1-2022"
+        self.intervals = ["4hr","8hr","1d", "1w", "1m"]
+        self.interval_data = "1w"
 
-    def get_historical_data(self, symbol, user_interval, start_date, end_date):
-
+    def get_historical_data(self):
+        all_data = {} 
         interval_map = {
             "1min"  : self.client.KLINE_INTERVAL_1MINUTE,
             "3min"  : self.client.KLINE_INTERVAL_3MINUTE,
@@ -27,19 +32,24 @@ class DataLoading(ClientConfig):
             "1m"  : self.client.KLINE_INTERVAL_1MONTH,
         }
 
-        interval = interval_map.get(user_interval, self.client.KLINE_INTERVAL_1DAY)
-        hist_data = self.client.get_historical_klines(
-            symbol=symbol,
-            interval=interval, 
-            start_str=start_date, 
-            end_str=end_date
+        for key in self.intervals:
+            interval_value = interval_map.get(key)
+            hist_data = self.client.get_historical_klines(
+                    symbol=self.asset,
+                    interval=interval_value, 
+                    start_str=self.start_date, 
+                    end_str=self.end_date
             )
-        self.data_processing(hist_data=hist_data)
-        return hist_data
+            
+            all_data[key] = hist_data
+
+        return all_data
         
-    def data_processing(self, hist_data):
-        #Raw data to a organized data
-        df_hist = pd.DataFrame(hist_data)
+    def data_processing(self, interval):
+
+        all_hist_data = self.get_historical_data()
+
+        df_hist = pd.DataFrame(all_hist_data[interval])
         df_hist.columns = ['Open Time', 'Open', 'High', 'Low', 'Close', 'Volume', 'Close Time',
                           'Quote Asset Volume', 'Number of Trades', 'Taker Buy Base Asset Volume',
                           'Taker Buy Quote Asset Volume', 'Ignore']
@@ -51,6 +61,7 @@ class DataLoading(ClientConfig):
         numeric_data = ['Open', 'High', 'Low', 'Close', 'Volume', 'Quote Asset Volume', 'Taker Buy Base Asset Volume', 'Taker Buy Quote Asset Volume']
         df_hist[numeric_data] = df_hist[numeric_data].apply(pd.to_numeric, axis=1)
 
+        # print(df_hist)
         return df_hist
   
     def verify_credentials(self):

@@ -8,8 +8,7 @@ class Strategy(DataLoading):
 
     def __init__(self):
         super().__init__()
-        self.hist_data = self.get_historical_data("BTCUSDT", "1d", "1-1-2019", "1-1-2021")
-        self.p_hist_data = self.data_processing(self.hist_data)
+        self.p_hist_data = self.data_processing(self.interval_data)
         #indcators
         # self.p_hist_data["rsi"] = ta.momentum.RSIIndicator(self.p_hist_data['Close'] , 14).rsi()
 
@@ -37,7 +36,3 @@ class Strategy(DataLoading):
         df["lips"] = self.smma_logic(df["hl2"], 7).shift(3)
 
         return df
-    
-
-# stg = Strategy()
-# stg.plotting()
