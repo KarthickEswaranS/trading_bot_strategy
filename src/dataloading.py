@@ -13,7 +13,7 @@ class DataLoading(ClientConfig):
         self.start_date = "1-1-2021"
         self.end_date = "1-1-2022"
         self.intervals = ["4hr","8hr","1d", "1w", "1m"]
-        self.interval_data = "1w"
+        self.interval_data = "1d"
 
     def get_historical_data(self):
         all_data = {} 
