@@ -39,54 +39,43 @@ class Execution(Strategy):
         tp = None
         sl = None
 
-        # df['tp_long'] = np.where(df['exit_long'], df['Close'], np.nan)  # 2% Take Profit
-        # df['sl_long'] = np.where(df['enter_long'], df['Low'].shift(1), np.nan)  # 1% Stop Loss
-
         for i in range(len(df)):
     
             if position == 0:
                 if df.iloc[i]['enter_long'] == True:
                    
                     entry_price = df.iloc[i]['Open']
-                    tp =  entry_price * 1.02  # 2% Take Profit
-                    sl =  entry_price * 0.99  # 1% Stop Loss
+                    tp =  entry_price * (1 + 0.1)  # 2% Take Profit
+                    sl =  entry_price *  (1 - 0.05)  # 1% Stop Loss
 
                     df.at[df.index[i], 'buy_price'] = entry_price
                     df.at[df.index[i], 'position'] = 1
                     df.at[df.index[i], 'tp_long'] = tp
-                    df.at[df.index[i], 'sl_long'] = sl 
+                    df.at[df.index[i], 'sl_long'] = sl  
 
                     position = 1
                     continue
 
+            elif position == 1 and df.iloc[i]['Close'] >= tp:
+                df.at[df.index[i], 'sell_price'] = tp
+                df.at[df.index[i], 'position'] = 0
+                position = 0   
+                continue
+
+            elif position == 1 and df.iloc[i]['Close'] <= sl:
+                df.at[df.index[i], 'sell_price'] = sl
+                df.at[df.index[i], 'position'] = 0
+                position = 0   
+                continue
+                
+
             elif position == 1 and df.iloc[i]['exit_long'] == True:
-                df.at[df.index[i], 'sell_price'] = df.iloc[i]['Open']
+                df.at[df.index[i], 'sell_price'] = df.iloc[i]['Close']
                 df.at[df.index[i], 'position'] = 0
                 position = 0
                 entry_price = None
                 continue
 
-                
-            # else:
-            #     high = df.iloc[i]['High']
-            #     low  = df.iloc[i]['Low']
-
-            #     # TP hit
-            #     if high >= tp:
-            #         df.at[df.index[i], 'sell_price'] = tp
-            #         df.at[df.index[i], 'position'] = 0
-            #         position = 0
-            #         entry_price = None
-            #         continue
-
-                # if low <= sl:
-                #     df.at[df.index[i], 'sell_price'] = sl
-                #     df.at[df.index[i], 'position'] = 0
-                #     position = 0
-                #     entry_price = None
-                #     continue
-
-                df.at[df.index[i], 'position'] = 1
         
         print(df[df['enter_long']])
 

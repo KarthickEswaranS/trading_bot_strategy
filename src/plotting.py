@@ -16,9 +16,9 @@ class Plotting(Execution):
             mplf.make_addplot(df["teeth"], color='yellow'),
             mplf.make_addplot(df["lips"], color='blue'),
             mplf.make_addplot(df['buy_price'], type='scatter', markersize=50, marker='^', color='blue'),
-            mplf.make_addplot(df['sell_price'], type='scatter', markersize=50, marker='v', color='green'),
-            # mplf.make_addplot(df['sl_long'], type='scatter', markersize=21, marker='_', color='red'),
-            # mplf.make_addplot(df['tp_long'], type='scatter', markersize=21, marker='_', color='black'),
+            mplf.make_addplot(df['sell_price'], type='scatter', markersize=50, marker='v', color='red'),
+            mplf.make_addplot(df['sl_long'], type='scatter', markersize=21, marker='_', color='black'),
+            mplf.make_addplot(df['tp_long'], type='scatter', markersize=21, marker='_', color='orange'),
         ]
 
         mplf.plot(
