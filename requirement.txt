@@ -1,6 +1,0 @@
-Trading Bot
--pip install pandas
--pip install python-binance
--pip install keyring
--pip install mplfinance
--pip install ta

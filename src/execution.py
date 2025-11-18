@@ -130,6 +130,3 @@ class Execution(Strategy):
         for l in range(len(self.loss_trades)):
             print(f" - {self.loss_trades[l]:.2f}")
        
-
-# ex = Execution()
-# ex.long_signal()
