@@ -62,31 +62,6 @@ class Execution(Strategy):
                 position = 1
                 continue
             
-            #Exit
-            # if position == 1 and df.iloc[i]['exit_long']:
-            #     exit_price = close
-            #     df.at[df.index[i], 'sell_price'] = exit_price
-            #     df.at[df.index[i], 'position'] = 0
-            #     position = 0
-
-            #     pnl = (exit_price - entry_price) * self.lot_size
-
-            #     if pnl >= 0:
-            #         self.profit_trades.append(pnl)
-            #     else:
-            #         self.loss_trades.append(abs(pnl))
-
-            #     self.balance += pnl
-
-            #     print(f"""-------------- EXIT LONG --------------
-            #         Entry Price: {entry_price}
-            #         Exit Price: {exit_price:.2f}
-            #         pnl: {pnl:.2f}
-            #         Balance: {self.balance:.2f}
-            #         """)
-            #     continue
-                
-            #Take Profit Hit
             if position == 1 and close >= tp:
                 exit_price = tp
                 df.at[df.index[i], 'sell_price'] = exit_price
