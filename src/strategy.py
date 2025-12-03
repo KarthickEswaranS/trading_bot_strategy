@@ -23,12 +23,11 @@ class Strategy(DataLoading):
     def stg_smma(self):
         df = self.p_hist_data
         
-        df.set_index('Open Time', inplace=True)
         df['hl2'] = (df['High'] + df['Low'])/2
 
         # Calculate SMMA lines
         df["jaw"] = self.smma_logic(df["hl2"], 21)
         df["teeth"] = self.smma_logic(df["hl2"], 11)
-        df["lips"] = self.smma_logic(df["hl2"], 7)
+        df["lip"] = self.smma_logic(df["hl2"], 7)
 
         return df

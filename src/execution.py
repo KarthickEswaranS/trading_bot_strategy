@@ -9,7 +9,7 @@ class Execution(Strategy):
         self.balance =  self.initial_balance
         self.lot_size = 1
         self.risk = 0.03
-        self.reward = 0.09
+        self.reward = 0.06
         
         self.long_profit_trades = []
         self.long_loss_trades = []
@@ -18,33 +18,57 @@ class Execution(Strategy):
   
         self.buy_sell_price()
 
-    def long_signal(self):
+    def signal(self):
 
         df = self.stg_smma()
 
         df['enter_long'] = (
-            ((df['Close'].shift(1) > df['lips'].shift(1)) & (df['Close'].shift(1) >= df['teeth'].shift(1))) &
-            ((df['lips'].shift(1)  > df['teeth'].shift(1)) & (df['lips'].shift(1)  > df['jaw'].shift(1)))
+            (df['Close'].shift(1) > df['teeth'].shift(1)) &
+            (df['Close'].shift(1) > df['lip'].shift(1)) &
+            (df['Close'].shift(1) > df['jaw'].shift(1)) 
+           
         )
 
         df['enter_short'] = (
-            ((df['Close'].shift(1) < df['lips'].shift(1)) & (df['Close'].shift(1) <= df['teeth'].shift(1))) &
-            ((df['lips'].shift(1)  < df['teeth'].shift(1)) & (df['lips'].shift(1)  < df['jaw'].shift(1)))
+            (df['Close'].shift(1) < df['teeth'].shift(1)) &
+            (df['Close'].shift(1) < df['lip'].shift(1)) &
+            (df['Close'].shift(1) < df['jaw'].shift(1)) 
+            
         )
 
         df['exit_long'] = (
-            ((df['Close'] < df['lips']) & (df['Close'] < df['teeth']))
+            ((df['Close'] < df['lip']) & (df['Close'] < df['teeth'])) 
+           
+        )
+        
+        df['exit_short'] = (
+            ((df['Close'] > df['lip']) & (df['Close'] > df['teeth'])) 
+           
         )
 
-        df['exit_short'] = (
-            ((df['Close'] > df['lips']) & (df['Close'] > df['teeth']))
-        )
+        # df['enter_long'] = (
+        #     ((df['Close'].shift(1) > df['lips'].shift(1)) & (df['Close'].shift(1) >= df['teeth'].shift(1))) &
+        #     ((df['lips'].shift(1)  > df['teeth'].shift(1)) & (df['lips'].shift(1)  > df['jaw'].shift(1)))
+        # )
+
+        # df['enter_short'] = (
+        #     ((df['Close'].shift(1) < df['lips'].shift(1)) & (df['Close'].shift(1) <= df['teeth'].shift(1))) &
+        #     ((df['lips'].shift(1)  < df['teeth'].shift(1)) & (df['lips'].shift(1)  < df['jaw'].shift(1)))
+        # )
+
+        # df['exit_long'] = (
+        #     ((df['Close'] < df['lips']) & (df['Close'] < df['teeth']))
+        # )
+
+        # df['exit_short'] = (
+        #     ((df['Close'] > df['lips']) & (df['Close'] > df['teeth']))
+        # )
      
         return df
        
    
     def buy_sell_price(self):
-        df = self.long_signal()
+        df = self.signal()
         cols = ['long_buy_price','long_sell_price','short_buy_price','short_sell_price',
         'long_sl', 'long_tp','short_tp','short_sl','position']
 
@@ -101,6 +125,7 @@ class Execution(Strategy):
             if position == 1 and close <= long_sl:
                 exit_price = long_sl
                 df.at[df.index[i], 'long_sl'] = exit_price
+                df.at[df.index[i], 'long_sell_price'] = exit_price
                 df.at[df.index[i], 'position'] = 0
                 position = 0
 
@@ -111,6 +136,7 @@ class Execution(Strategy):
             elif position == 1 and close >= long_tp:
                 exit_price = long_tp
                 df.at[df.index[i], 'long_tp'] = exit_price
+                df.at[df.index[i], 'long_sell_price'] = exit_price
                 df.at[df.index[i], 'position'] = 0
                 position = 0
                 
@@ -125,6 +151,7 @@ class Execution(Strategy):
             if position == -1 and close >= short_sl:
                 exit_price = short_sl
                 df.at[df.index[i], 'short_sl'] = exit_price
+                df.at[df.index[i], 'short_sell_price'] = exit_price
                 df.at[df.index[i], 'position'] = 0
                 position = 0
 
@@ -135,6 +162,7 @@ class Execution(Strategy):
             elif position == -1 and close <= short_tp:
                 exit_price = short_tp
                 df.at[df.index[i], 'short_tp'] = exit_price
+                df.at[df.index[i], 'short_sell_price'] = exit_price
                 df.at[df.index[i], 'position'] = 0
                 position = 0
                 
@@ -143,6 +171,7 @@ class Execution(Strategy):
                 self.balance += pnl
                 continue
 
+        # print(df)
         self.results()
         
         return df

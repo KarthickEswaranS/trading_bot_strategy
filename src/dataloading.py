@@ -59,8 +59,8 @@ class DataLoading(ClientConfig):
         #converting string to numeric values
         numeric_data = ['Open', 'High', 'Low', 'Close', 'Volume', 'Quote Asset Volume', 'Taker Buy Base Asset Volume', 'Taker Buy Quote Asset Volume']
         df_hist[numeric_data] = df_hist[numeric_data].apply(pd.to_numeric, axis=1)
+        df_hist.set_index('Open Time', inplace=True)
 
-        # print(df_hist)
         return df_hist
   
     def verify_credentials(self):

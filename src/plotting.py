@@ -6,25 +6,30 @@ class Plotting(Execution):
 
     def __init__(self):
         super().__init__()
+        self.plot_data()
 
     def plot_data(self):
-        df = self.long_signal()
+        df = self.buy_sell_price()
     
         adsmma = [
             mplf.make_addplot(df["jaw"], color='red'),
             mplf.make_addplot(df["teeth"], color='yellow'),
-            mplf.make_addplot(df["lips"], color='blue'),
-            mplf.make_addplot(df['buy_price'], type='scatter', markersize=50, marker='^', color='blue'),
-            mplf.make_addplot(df['sell_price'], type='scatter', markersize=50, marker='<', color='red'),
-            mplf.make_addplot(df['sl_long'], type='scatter', markersize=21, marker='_', color='black'),
-            mplf.make_addplot(df['tp_long'], type='scatter', markersize=21, marker='_', color='orange'),
+            mplf.make_addplot(df["lip"], color='blue'),
+            mplf.make_addplot(df['long_buy_price'], type='scatter', markersize=50, marker='^', color='blue'),
+            mplf.make_addplot(df['long_sell_price'], type='scatter', markersize=50, marker='<', color='red'),
+            mplf.make_addplot(df['short_buy_price'], type='scatter', markersize=50, marker='v', color='black'),
+            mplf.make_addplot(df['short_sell_price'], type='scatter', markersize=50, marker='<', color='green'),
+            mplf.make_addplot(df['long_tp'], type='scatter', markersize=21, marker='_', color='blue'),
+            mplf.make_addplot(df['long_sl'], type='scatter', markersize=21, marker='_', color='red'),
+            mplf.make_addplot(df['short_sl'], type='scatter', markersize=21, marker='_', color='black'),
+            mplf.make_addplot(df['short_tp'], type='scatter', markersize=21, marker='_', color='green'),
         ]
 
         mplf.plot(
             df,
             type='candle',
             style='yahoo',
-            title="Candlestick + SMMA Alligator (Lips cross Teeth & Jaw)",
+            title="Smoothed Moving Average",
             addplot=adsmma,
             volume=False,
             ylabel='Price',
@@ -32,5 +37,4 @@ class Plotting(Execution):
             figscale=1.2,
         )
 
-pl = Plotting()
-pl.plot_data()
+Plotting()
