@@ -8,8 +8,8 @@ class Execution(Strategy):
         self.initial_balance = 100000
         self.balance =  self.initial_balance
         self.lot_size = 1
-        self.risk = 0.03
-        self.reward = 0.06
+        self.risk = 0.02
+        self.reward = 0.04
         
         self.long_profit_trades = []
         self.long_loss_trades = []

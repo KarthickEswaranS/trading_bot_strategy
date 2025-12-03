@@ -1,8 +1,34 @@
-# Crypto Bot strategy
-- Developed a complete algorithmic crypto trading strategy entirely from scratch using Python, applying a systematic and data-driven approach to trading.
-- Integrated real-time and historical market data through the Binance API, enabling accurate signal generation and real-market condition analysis.
-- Leveraged NumPy and Pandas for efficient data processing, including cleaning, structuring, feature engineering, and calculating indicator-based trade conditions.
-- Implemented risk management logic, defining entry/exit conditions, stop-loss, take-profit, and position-handling rules to improve strategy robustness.
-- Used mplfinance to visualize candlestick charts, overlays, and trade signals, assisting in validating strategy behavior across different market conditions.
-- Built a comprehensive backtesting framework to evaluate the strategy’s performance, generating metrics such as win rate, profit/loss distribution, trade count, and equity curve.
-- Designed the project with clarity and modularity, making it scalable for future enhancements such as optimization, additional indicators, or live deployment.
+## 2. Crypto Bot Strategy  
+🔗 **Live Link:** [Insert Link]
+
+### 📌 Overview  
+Developed a complete algorithmic crypto trading strategy from scratch using Python, focusing on a systematic and data-driven approach to trade execution.
+
+### 🚀 Key Contributions  
+- Integrated **real-time and historical market data** using the Binance API to generate accurate trading signals and analyze real-market conditions.  
+- Utilized **NumPy** and **Pandas** for efficient data preprocessing, feature engineering, and indicator-based trade condition calculations.  
+- Implemented full **risk management logic**, including entry/exit rules, automated stop-loss and take-profit, and dynamic position handling for strategy robustness.  
+- Visualized candlestick charts, overlays, and trade signals using **mplfinance**, improving strategy interpretability and validation.  
+- Built a **comprehensive backtesting framework** to evaluate performance, including win rate, P/L distribution, trade count, drawdown, and equity curve analysis.  
+- Designed the project with a **clean, modular architecture**, making it scalable for future enhancements such as hyperparameter optimization, new indicators, or live automated deployment.
+
+---
+
+### 🛠️ Technical Stack  
+
+**Programming**  
+- Python (NumPy, Pandas, Matplotlib, mplfinance)
+
+**Data Source**  
+- Binance API (real-time + historical market data)
+
+**Trading Logic**  
+- SMMA strategy  
+- Indicator-based trade conditions  
+- Automated SL/TP, position rules
+
+**Backtesting**  
+- Long-term performance evaluation  
+- Equity curve & win-rate analysis  
+- P/L and trade distribution tracking  
+
