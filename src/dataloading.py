@@ -1,14 +1,14 @@
 from src.clientconfig import ClientConfig
 import binance
 import pandas as pd
-import mplfinance as mplf
+
 
 
 class DataLoading(ClientConfig):
 
     def __init__(self):
         super().__init__()
-        self.client = binance.Client(self.api_key, self.api_secret)
+        self.client = self.get_client()
         self.asset = "BTCUSDT"
         self.start_date = "1-1-2023"
         self.end_date = "31-12-2024"
@@ -31,8 +31,8 @@ class DataLoading(ClientConfig):
             "1m"  : self.client.KLINE_INTERVAL_1MONTH,
         }
 
-        for key in self.intervals:
-            interval_value = interval_map.get(key)
+        for interval in self.intervals:
+            interval_value = interval_map.get(interval)
             hist_data = self.client.get_historical_klines(
                     symbol=self.asset,
                     interval=interval_value, 
@@ -40,7 +40,7 @@ class DataLoading(ClientConfig):
                     end_str=self.end_date
             )
             
-            all_data[key] = hist_data
+            all_data[interval] = hist_data
 
         return all_data
         

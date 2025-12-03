@@ -1,7 +1,6 @@
 from src.execution import Execution
-# from src.strategy import Strategy
 import mplfinance as mplf
-import pandas as pd
+
 
 class Plotting(Execution):
 

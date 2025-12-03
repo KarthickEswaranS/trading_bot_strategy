@@ -1,17 +1,12 @@
 from src.dataloading import DataLoading
 import numpy as np
 import pandas as pd
-# import matplotlib.pyplot as plt
-import mplfinance as mplf
-import ta
+
 class Strategy(DataLoading):
 
     def __init__(self):
         super().__init__()
-        self.interval_data = "1d"
-        self.p_hist_data = self.data_processing(self.interval_data)
-        #indcators
-        # self.p_hist_data["rsi"] = ta.momentum.RSIIndicator(self.p_hist_data['Close'] , 14).rsi()
+        self.p_hist_data = self.data_processing('1d')
 
     def smma_logic(self, series, length):
         smma_values = []
