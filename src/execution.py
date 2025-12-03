@@ -16,8 +16,6 @@ class Execution(Strategy):
         self.short_profit_trades = []
         self.short_loss_trades = []
   
-        self.buy_sell_price()
-
     def signal(self):
 
         df = self.stg_smma()
@@ -46,23 +44,6 @@ class Execution(Strategy):
            
         )
 
-        # df['enter_long'] = (
-        #     ((df['Close'].shift(1) > df['lips'].shift(1)) & (df['Close'].shift(1) >= df['teeth'].shift(1))) &
-        #     ((df['lips'].shift(1)  > df['teeth'].shift(1)) & (df['lips'].shift(1)  > df['jaw'].shift(1)))
-        # )
-
-        # df['enter_short'] = (
-        #     ((df['Close'].shift(1) < df['lips'].shift(1)) & (df['Close'].shift(1) <= df['teeth'].shift(1))) &
-        #     ((df['lips'].shift(1)  < df['teeth'].shift(1)) & (df['lips'].shift(1)  < df['jaw'].shift(1)))
-        # )
-
-        # df['exit_long'] = (
-        #     ((df['Close'] < df['lips']) & (df['Close'] < df['teeth']))
-        # )
-
-        # df['exit_short'] = (
-        #     ((df['Close'] > df['lips']) & (df['Close'] > df['teeth']))
-        # )
      
         return df
        

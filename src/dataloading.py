@@ -2,8 +2,6 @@ from src.clientconfig import ClientConfig
 import binance
 import pandas as pd
 
-
-
 class DataLoading(ClientConfig):
 
     def __init__(self):
