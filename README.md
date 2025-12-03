@@ -1,4 +1,4 @@
-## 2. Crypto Bot Strategy  
+# SMMA Crypto Bot Strategy  
 
 ### 📌 Overview  
 Developed a complete algorithmic crypto trading strategy from scratch using Python, focusing on a systematic and data-driven approach to trade execution.
